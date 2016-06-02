@@ -13,20 +13,34 @@
       zMax: 800,
       extruderSteps: 0
   }
-  var file = "teensy"
-  fs.readFile("/gode/" + file + ".gcode", "utf8", function(err) {
-      if (err) {
-          console.log(err);
-      }
-  })
+  var gcodefile = "gcode/" + "teensy" + ".gcode";
+  var lineReader = require('readline').createInterface({
+    input: require('fs').createReadStream(gcodefile)
+  });
 
-  while (!eof(file)) {
-      var code = f.readline()
-      if (code = G1) {}
+  lineReader.on('line', function (line) {
+    console.log(line);
+
+
+  });
+
+  // fs.readFile("gcode/" + "teensy" + ".gcode", "utf8", function(err,data) {
+  //     if (err) {
+  //         console.log(err);
+  //     }
+  //     console.log('Line from file:',data);
+  //     console.log('AHHHHH!');
+  // })
+
+/*
+  while(gcode) {
+      var code = //read single line of gcode
       if (code = G28) {}
+      if (code = G1) {}
       if (code = G92) {}
       if (code = M84) {}
       if (code = M107) {}
+      if (code = G90) {}
   }
 
   function G1(code) {
@@ -39,7 +53,7 @@
       if (code = Z) {
           var Z = code
       }
-      if (code  = E) {
+      if (code = E) {
           var E = code
       }
       if (code = F) {}
@@ -54,7 +68,20 @@
 
   function M106(code) {
       if (code = S) {}
-      if (code = P1) {
+      if (code  = P1) {
 
       }
   }
+*/
+
+function readGcodeFile(file){
+fs.readFile("gcode/" + file + ".gcode", "utf8", function(err,data) {
+    if (err) {
+        console.log(err);
+    }
+
+
+
+
+})
+}
