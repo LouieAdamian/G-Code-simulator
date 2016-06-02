@@ -1,4 +1,6 @@
-var app = require('express')();
+var file
+var stringParse = require("stringParse");
+var fs = require('fs');
 var printerState = {
     extruderTemp;
     bedTemp;
@@ -13,9 +15,9 @@ var printerState = {
     zMax;
     extruderSteps;
 }
+fs.readFile("/gode/"+file+".stl","utf8")
 
-
-while (!eof()) {
+while (!eof(file)) {
     var code = f.readline()
     if (code = G1) {}
     if (code = G28) {}
@@ -25,21 +27,31 @@ while (!eof()) {
 }
 
 function G1(code) {
-    if (code = X) {}
-    if (code =Y){}
-    if (code =Z){}
-    if (code =E){}
-    if (code =F){}
+    if (code = X) {
+        int X = code;
+    }
+    if (code = Y) {
+        int Y = code;
+    }
+    if (code = Z) {
+        int Z = code
+    }
+    if (code = E) {
+        int E = codez
+    }
+    if (code = F) {}
 }
 
 function G92(code) {
-
+    if (code = X) {}
+    if (code = Y) {}
+    if (code = Z) {}
+    if (code = E) {}
 }
 
 function M106(code) {
+    if (code = S) {}
+    if (code = P1) {
 
-}
-
-function G92() {
-
+    }
 }
