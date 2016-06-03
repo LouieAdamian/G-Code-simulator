@@ -32,8 +32,8 @@
           var tokens = line.split(" ");
           // console.log(tokens);
 
-          var code = token[location]
-          parseGcode(tokens);
+          var code = tokens[location]
+          parseGcode(code);
 
       });
   }
@@ -46,6 +46,7 @@
       if (code = "G1") {
           console.log("G1");
           nextToken()
+          parseG1(code)
       } else if (code = "G92") {
           //set position
       } else if (code = "M84") {
@@ -68,11 +69,29 @@
   }
 
   function parseG1(code) {
+    var one = code.substring(0,0)
+    if(one = "X"){
+
+    }
+
+    if (one = "Y"){
+
+    }
+    if (one = "Z"){
+
+    }
 
   }
 
 
-  function parsem104() {
+  function parseM104() {
       // set exxtuder temperature
+     var one = code.substring(0,0)
+     if(one = "s"){
 
-  }
+
+     }
+     else{
+       console.log("no temperature ");
+}
+}
