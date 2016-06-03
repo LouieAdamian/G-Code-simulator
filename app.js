@@ -15,6 +15,12 @@
       extruderSteps: 0
 
   }
+  var location = 0
+
+
+  readGcodeFile("teensy")
+  console.log("finished");
+
 
   function readGcodeFile(file) {
       var gcodefile = "gcode/" + file + ".gcode";
@@ -25,52 +31,48 @@
       lineReader.on('line', function(line) {
           var tokens = line.split(" ");
           // console.log(tokens);
-          if (altrun = 0;) {
-              parseGcode(tokens)
-          }
-          if (altrun = 1){
-            parseG1(tokens)
-          }
+
+          var code = token[location]
+          parseGcode(tokens);
+
       });
   }
-  readGcodeFile("teensy")
-
 
   function parseGcode(code) {
-
 
       if (code = "G28") {
           //orgin
       }
       if (code = "G1") {
           console.log("G1");
-          altrun = 1;
+          nextToken()
+      } else if (code = "G92") {
+          //set position
+      } else if (code = "M84") {
+          //stop idle hold
+      } else if (code = "M107") {
+          //fan off
+      } else if (code = "G90") {
+          //set to absolute position
+      } else if (code = "m104") {
+          // set exxtuder temperature
+      } else if (code = ";") {
+
+      } else {
 
       }
-      if (code = "G92") {
-          //set position
-      }
-      if (code = "M84") {
-          //stop idle hold
-      }
-      if (code = "M107") {
-          //fan off
-      }
-      if (code = "G90") {
-          //set to absolute position
-      }
-      if (code = "m104") {
-          // set exxtuder temperature
-      }
+  }
+
+  function nextToken() {
+ location = location++
+  }
+
+  function parseG1(code) {
 
   }
-function nextToken() {
 
-}
 
-function parseG1() {
+  function parsem104() {
+      // set exxtuder temperature
 
-}
-function parseTempSet() {
-
-}
+  }
