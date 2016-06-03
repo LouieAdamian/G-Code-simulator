@@ -1,3 +1,4 @@
+  var altrun = 0;
   var fs = require('fs');
   var prvarerState = {
       extruderTemp: 215,
@@ -24,74 +25,52 @@
       lineReader.on('line', function(line) {
           var tokens = line.split(" ");
           // console.log(tokens);
-          parseGcode(tokens)
+          if (altrun = 0;) {
+              parseGcode(tokens)
+          }
+          if (altrun = 1){
+            parseG1(tokens)
+          }
       });
   }
   readGcodeFile("teensy")
 
 
-
-
-
   function parseGcode(code) {
-    var func
-    var atr1
-      if (code = "G28") {
 
+
+      if (code = "G28") {
+          //orgin
       }
       if (code = "G1") {
           console.log("G1");
+          altrun = 1;
 
       }
       if (code = "G92") {
-
+          //set position
       }
       if (code = "M84") {
-
+          //stop idle hold
       }
       if (code = "M107") {
-
+          //fan off
       }
       if (code = "G90") {
-        
+          //set to absolute position
       }
+      if (code = "m104") {
+          // set exxtuder temperature
+      }
+
   }
+function nextToken() {
 
+}
 
-  //something to sperate line by line
-  //something for EOF detection
+function parseG1() {
 
+}
+function parseTempSet() {
 
-
-
-
-
-  function G1(code) {
-      if (code = X) {
-          var X = code;
-      }
-      if (code = Y) {
-          var Y = code;
-      }
-      if (code = Z) {
-          var Z = code
-      }
-      if (code = E) {
-          var E = code
-      }
-      if (code = F) {}
-  }
-
-  function G92(code) {
-      if (code = X) {}
-      if (code = Y) {}
-      if (code = Z) {}
-      if (code = E) {}
-  }
-
-  function M106(code) {
-      if (code = S) {}
-      if (code = P1) {
-
-      }
-  }
+}
