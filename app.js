@@ -1,11 +1,12 @@
   var altrun = 0;
   var fs = require('fs');
-  var prvarerState = {
+  var state = {
+      distmode: true, // true = abs, false = rel
       extruderTemp: 215,
       bedTemp: 85,
-      x: 100,
-      y: 100,
-      z: 100,
+      x: 0,
+      y: 0,
+      z: 0,
       xMin: 000,
       xMax: 400,
       yMin: 000,
@@ -13,27 +14,33 @@
       zMin: 000,
       zMax: 800,
       extruderSteps: 0
-
   }
   var location = -1
+  var elapsedtime = 0;
 
 
-  readGcodeFile("teensy")
+  estGcodeFileTime("teensy")
   console.log("finished");
 
 
-  function readGcodeFile(file) {
+  function estGcodeFileTime(file) {
       var gcodefile = "gcode/" + file + ".gcode";
       var lineReader = require('readline').createInterface({
           input: require('fs').createReadStream(gcodefile)
       });
 
+     console.log("AHHHHH!")
+      elapsedtime = 0;
       lineReader.on('line', function(line) {
           var tokens = line.split(" ");
           // console.log(tokens);
           parseGcode(tokens);
           resToken();
       });
+      lineReader.on('close', function(){
+        console.log("elapsed time:",elapsedtime);
+      });
+
   }
 
   function parseGcode(tokens) {
@@ -41,17 +48,24 @@
       //console.log(code)
       if (code == "G28") {
           //orgin
+          state.x = 0;
+          state.y = 0;
+          state.z = 0;
       }
       if (code == "G1") {
-          parseG1(tokens);
+        elapsedtime += parseG1(tokens);
+      } else if (code == "G90") {
+        //set to absolute position
+        state.distmode = true;
+      } else if (code == "G91") {
+        //set to relative position
+        state.distmode = false;
       } else if (code == "G92") {
           //set position
       } else if (code == "M84") {
           //stop idle hold
       } else if (code == "M107") {
           //fan off
-      } else if (code == "G90") {
-          //set to absolute position
       } else if (code == "m104") {
           // set exxtuder temperature
       } else if (code == ";") {
@@ -79,49 +93,71 @@
   }
 
   function parseG1(tokens) {
+      var x;
+      var y;
+      var z;
+      var e;
+      var f;
       while (hasTokens(tokens)) {
           var code = nextToken(tokens);
           //console.log("code: ",code);
           // console.log("G1");
-          var one = code.substring(0, 1)
-          var two = code.substring(1)
-          if (one == "X") {
-              var x = two
-              console.log("X", two);
+          var axis = code.substring(0, 1)
+          var dist = code.substring(1)
+          if (axis == "X") {
+              x = dist
+              console.log("X", dist);
           }
-          if (one == "Y") {
-              var y = two
-              console.log("Y", two);
+          if (axis == "Y") {
+              y = dist
+              console.log("Y", dist);
           }
-          if (one == "Z") {
-              var z = two
-              console.log("z", two);
+          if (axis == "Z") {
+              z = dist
+              console.log("Z", dist);
           }
       }
-      distanceCalc(x, y, z, px, py, pz, 100, 50)
-
-      var px = x;
-      var py = y;
-      var pz = z;
-
+      var time = 0;
+      if (x != undefined && y != undefined) {
+        if(state.distmode){
+          // absolute distance mode
+          var px = state.x;
+          var py = state.y;
+          time = timeCalcXY(x, y, px, py, 100);
+          state.x = x;
+          state.y = y;
+        }else{
+          // relative distance mode
+          time = timeCalcXY(x, y, 0, 0, 100);
+          state.x += x;
+          state.y += y;
+        }
+      } else if (z != undefined) {
+        if(state.distmode){
+          // absolute distance mode
+          var pz = state.z;
+          time = timeCalcZ(z, pz, 50);
+          state.z = z;
+        }else{
+          // relative distance mode
+          time = timeCalcZ(z, 0, 50);
+          state.z += z;
+        }
+      } else {
+          console.log("error",tokens);
+          time = 0;
+      }
+      return time;
   }
 
-  function distanceCalc(x, y, z, px, py, pz, speedXY, speedZ) {
-      var disX;
-      var disY;
-      var disZ;
+  function timeCalcXY(x, y, px, py, speedXY) {
+      var disX = x - px;
+      var disY = y - py;
+      return Math.sqrt(disX * disX + disY * disY) / speedXY;
+  }
 
-      disX = x - px;
-      disY = y - py;
-      disZ = z - pz;
-      timeX = disX / speedXY;
-      timeY = disY / speedXY;
-      timeZ = disZ / speedZ;
-
-      console.log(timeX);
-      console.log(timeY);
-      console.log(timeZ);
-
+  function timeCalcZ(z, pz, speedZ) {
+      return Math.abs(z - pz) / speedZ;
   }
 
   function parseM104() {
