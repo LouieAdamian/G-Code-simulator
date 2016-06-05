@@ -29,7 +29,6 @@
           input: require('fs').createReadStream(gcodefile)
       });
 
-     console.log("AHHHHH!")
       elapsedtime = 0;
       lineReader.on('line', function(line) {
           var tokens = line.split(" ");
@@ -38,7 +37,7 @@
           resToken();
       });
       lineReader.on('close', function(){
-        console.log("elapsed time:",elapsedtime);
+        console.log("elapsed time:",elapsedtime,"seconds");
       });
 
   }
@@ -71,7 +70,7 @@
       } else if (code == ";") {
 
       } else {
-
+        console.log("skipping", code);
       }
   }
 
@@ -98,23 +97,24 @@
       var z;
       var e;
       var f;
+      //console.log(tokens)
       while (hasTokens(tokens)) {
           var code = nextToken(tokens);
           //console.log("code: ",code);
           // console.log("G1");
           var axis = code.substring(0, 1)
-          var dist = code.substring(1)
+          var dist = parseFloat(code.substring(1))
           if (axis == "X") {
               x = dist
-              console.log("X", dist);
+              //console.log("X", dist);
           }
           if (axis == "Y") {
               y = dist
-              console.log("Y", dist);
+              //console.log("Y", dist);
           }
           if (axis == "Z") {
               z = dist
-              console.log("Z", dist);
+              //console.log("Z", dist);
           }
       }
       var time = 0;
@@ -123,12 +123,12 @@
           // absolute distance mode
           var px = state.x;
           var py = state.y;
-          time = timeCalcXY(x, y, px, py, 100);
+          time = timeCalcXY(x, y, px, py, 50);
           state.x = x;
           state.y = y;
         }else{
           // relative distance mode
-          time = timeCalcXY(x, y, 0, 0, 100);
+          time = timeCalcXY(x, y, 0, 0, 50);
           state.x += x;
           state.y += y;
         }
@@ -136,11 +136,11 @@
         if(state.distmode){
           // absolute distance mode
           var pz = state.z;
-          time = timeCalcZ(z, pz, 50);
+          time = timeCalcZ(z, pz, 10);
           state.z = z;
         }else{
           // relative distance mode
-          time = timeCalcZ(z, 0, 50);
+          time = timeCalcZ(z, 0, 10);
           state.z += z;
         }
       } else {
@@ -150,7 +150,7 @@
       return time;
   }
 
-  function timeCalcXY(x, y, px, py, speedXY) {
+  function timeCalcXY(x, y, px, py, speedXY) { //speedXY is in mm/s
       var disX = x - px;
       var disY = y - py;
       return Math.sqrt(disX * disX + disY * disY) / speedXY;
@@ -161,7 +161,7 @@
   }
 
   function parseM104() {
-      // set exxtuder temperature
+      // set extuder  temperature
       var one = code.substring(0, 0)
       if (one = "s") {
 
