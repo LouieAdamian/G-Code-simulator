@@ -45,8 +45,8 @@
       }
       if (code = "G1") {
           console.log("G1");
-          nextToken()
-          parseG1(code)
+          nextToken();
+          parseG1(code);
       } else if (code = "G92") {
           //set position
       } else if (code = "M84") {
@@ -65,33 +65,33 @@
   }
 
   function nextToken() {
- location = location++
+      location = location++;
   }
 
   function parseG1(code) {
-    var one = code.substring(0,0)
-    if(one = "X"){
+      var one = code.substring(0, 1)
+      if (one = "X") {
+          console.log("X");
+      }
 
-    }
+      if (one = "Y") {
+          console.log("Y");
+      }
+      if (one = "Z") {
+          console.log("z");
 
-    if (one = "Y"){
-
-    }
-    if (one = "Z"){
-
-    }
+      }
 
   }
 
 
   function parseM104() {
       // set exxtuder temperature
-     var one = code.substring(0,0)
-     if(one = "s"){
+      var one = code.substring(0, 0)
+      if (one = "s") {
 
 
-     }
-     else{
-       console.log("no temperature ");
-}
-}
+      } else {
+          console.log("no extruder temperature");
+      }
+  }
