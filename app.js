@@ -15,7 +15,7 @@
       extruderSteps: 0
 
   }
-  var location = 0
+  var location = -1
 
 
   readGcodeFile("teensy")
@@ -31,59 +31,73 @@
       lineReader.on('line', function(line) {
           var tokens = line.split(" ");
           // console.log(tokens);
-
-          var code = tokens[location]
-          parseGcode(code);
-
+          parseGcode(tokens);
+          resToken();
       });
   }
 
-  function parseGcode(code) {
-
-      if (code = "G28") {
+  function parseGcode(tokens) {
+     var code = nextToken(tokens);
+     //console.log(code)
+      if (code == "G28") {
           //orgin
       }
-      if (code = "G1") {
-          console.log("G1");
-          nextToken();
-          parseG1(code);
-      } else if (code = "G92") {
+      if (code == "G1") {
+          parseG1(tokens);
+      } else if (code == "G92") {
           //set position
-      } else if (code = "M84") {
+      } else if (code == "M84") {
           //stop idle hold
-      } else if (code = "M107") {
+      } else if (code == "M107") {
           //fan off
-      } else if (code = "G90") {
+      } else if (code == "G90") {
           //set to absolute position
-      } else if (code = "m104") {
+      } else if (code == "m104") {
           // set exxtuder temperature
-      } else if (code = ";") {
+      } else if (code == ";") {
 
       } else {
 
       }
   }
 
-  function nextToken() {
-      location = location++;
+  function hasTokens(tokens){
+    if(location<tokens.length-1){
+      return true;
+    }else{
+      return false;
+    }
   }
 
-  function parseG1(code) {
-      var one = code.substring(0, 1)
-      if (one = "X") {
-          console.log("X");
-      }
-
-      if (one = "Y") {
-          console.log("Y");
-      }
-      if (one = "Z") {
-          console.log("z");
-
-      }
-
+  function resToken() {
+      location = -1;
   }
 
+  function nextToken(tokens) {
+      location++;
+      return tokens[location]
+  }
+
+  function parseG1(tokens) {
+      while(hasTokens(tokens)){
+        var code = nextToken(tokens);
+        //console.log("code: ",code);
+        // console.log("G1");
+        var one = code.substring(0, 1)
+        var two = code.substring(1)
+        if (one == "X") {
+            var x = two
+            console.log("X", two);
+        }
+        if (one == "Y") {
+            var y = two
+            console.log("Y", two);
+        }
+        if (one == "Z") {
+            console.log("z",two);
+        }
+      }
+  }
 
   function parseM104() {
       // set exxtuder temperature
