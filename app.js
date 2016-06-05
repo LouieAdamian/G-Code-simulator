@@ -37,8 +37,8 @@
   }
 
   function parseGcode(tokens) {
-     var code = nextToken(tokens);
-     //console.log(code)
+      var code = nextToken(tokens);
+      //console.log(code)
       if (code == "G28") {
           //orgin
       }
@@ -61,12 +61,12 @@
       }
   }
 
-  function hasTokens(tokens){
-    if(location<tokens.length-1){
-      return true;
-    }else{
-      return false;
-    }
+  function hasTokens(tokens) {
+      if (location < tokens.length - 1) {
+          return true;
+      } else {
+          return false;
+      }
   }
 
   function resToken() {
@@ -79,24 +79,49 @@
   }
 
   function parseG1(tokens) {
-      while(hasTokens(tokens)){
-        var code = nextToken(tokens);
-        //console.log("code: ",code);
-        // console.log("G1");
-        var one = code.substring(0, 1)
-        var two = code.substring(1)
-        if (one == "X") {
-            var x = two
-            console.log("X", two);
-        }
-        if (one == "Y") {
-            var y = two
-            console.log("Y", two);
-        }
-        if (one == "Z") {
-            console.log("z",two);
-        }
+      while (hasTokens(tokens)) {
+          var code = nextToken(tokens);
+          //console.log("code: ",code);
+          // console.log("G1");
+          var one = code.substring(0, 1)
+          var two = code.substring(1)
+          if (one == "X") {
+              var x = two
+              console.log("X", two);
+          }
+          if (one == "Y") {
+              var y = two
+              console.log("Y", two);
+          }
+          if (one == "Z") {
+              var z = two
+              console.log("z", two);
+          }
       }
+      distanceCalc(x, y, z, px, py, pz, 100, 50)
+
+      var px = x;
+      var py = y;
+      var pz = z;
+
+  }
+
+  function distanceCalc(x, y, z, px, py, pz, speedXY, speedZ) {
+      var disX;
+      var disY;
+      var disZ;
+
+      disX = x - px;
+      disY = y - py;
+      disZ = z - pz;
+      timeX = disX / speedXY;
+      timeY = disY / speedXY;
+      timeZ = disZ / speedZ;
+
+      console.log(timeX);
+      console.log(timeY);
+      console.log(timeZ);
+
   }
 
   function parseM104() {
