@@ -17,7 +17,13 @@
   }
   var location = -1
   var elapsedtime = 0;
-
+  var speedXY = 500;
+  var speedZ = 100;
+  var speedXY = 50
+  speedXY = speedXY / 10
+  speedZ = speedZ / 10
+  console.log(speedXY);
+  console.log(speedZ);
 
   estGcodeFileTime("teensy")
   console.log("finished");
@@ -36,8 +42,8 @@
           parseGcode(tokens);
           resToken();
       });
-      lineReader.on('close', function(){
-        console.log("elapsed time:",elapsedtime,"seconds");
+      lineReader.on('close', function() {
+          console.log("elapsed time:", elapsedtime, "seconds");
       });
 
   }
@@ -52,13 +58,13 @@
           state.z = 0;
       }
       if (code == "G1") {
-        elapsedtime += parseG1(tokens);
+          elapsedtime += parseG1(tokens);
       } else if (code == "G90") {
-        //set to absolute position
-        state.distmode = true;
+          //set to absolute position
+          state.distmode = true;
       } else if (code == "G91") {
-        //set to relative position
-        state.distmode = false;
+          //set to relative position
+          state.distmode = false;
       } else if (code == "G92") {
           //set position
       } else if (code == "M84") {
@@ -70,7 +76,7 @@
       } else if (code == ";") {
 
       } else {
-        console.log("skipping", code);
+          console.log("skipping", code);
       }
   }
 
@@ -106,45 +112,45 @@
           var dist = parseFloat(code.substring(1))
           if (axis == "X") {
               x = dist
-              //console.log("X", dist);
+                  //console.log("X", dist);
           }
           if (axis == "Y") {
               y = dist
-              //console.log("Y", dist);
+                  //console.log("Y", dist);
           }
           if (axis == "Z") {
               z = dist
-              //console.log("Z", dist);
+                  //console.log("Z", dist);
           }
       }
       var time = 0;
       if (x != undefined && y != undefined) {
-        if(state.distmode){
-          // absolute distance mode
-          var px = state.x;
-          var py = state.y;
-          time = timeCalcXY(x, y, px, py, 50);
-          state.x = x;
-          state.y = y;
-        }else{
-          // relative distance mode
-          time = timeCalcXY(x, y, 0, 0, 50);
-          state.x += x;
-          state.y += y;
-        }
+          if (state.distmode) {
+              // absolute distance mode
+              var px = state.x;
+              var py = state.y;
+              time = timeCalcXY(x, y, px, py, speedXY);
+              state.x = x;
+              state.y = y;
+          } else {
+              // relative distance mode
+              time = timeCalcXY(x, y, 0, 0, speedXY);
+              state.x += x;
+              state.y += y;
+          }
       } else if (z != undefined) {
-        if(state.distmode){
-          // absolute distance mode
-          var pz = state.z;
-          time = timeCalcZ(z, pz, 10);
-          state.z = z;
-        }else{
-          // relative distance mode
-          time = timeCalcZ(z, 0, 10);
-          state.z += z;
-        }
+          if (state.distmode) {
+              // absolute distance mode
+              var pz = state.z;
+              time = timeCalcZ(z, pz, speedZ);
+              state.z = z;
+          } else {
+              // relative distance mode
+              time = timeCalcZ(z, 0, speedZ);
+              state.z += z;
+          }
       } else {
-          console.log("error",tokens);
+          console.log("error", tokens);
           time = 0;
       }
       return time;
