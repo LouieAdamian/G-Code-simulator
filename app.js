@@ -17,7 +17,9 @@
   }
   var location = -1
   var elapsedtime = 0;
-
+  var speedXY = 50
+  var speedXY = speedXY/10
+  var speedZ = speedZ/10
 
   estGcodeFileTime("teensy")
   console.log("finished");
@@ -123,12 +125,12 @@
           // absolute distance mode
           var px = state.x;
           var py = state.y;
-          time = timeCalcXY(x, y, px, py, 50);
+          time = timeCalcXY(x, y, px, py, speedXY);
           state.x = x;
           state.y = y;
         }else{
           // relative distance mode
-          time = timeCalcXY(x, y, 0, 0, 50);
+          time = timeCalcXY(x, y, 0, 0, speedXY);
           state.x += x;
           state.y += y;
         }
@@ -136,11 +138,11 @@
         if(state.distmode){
           // absolute distance mode
           var pz = state.z;
-          time = timeCalcZ(z, pz, 10);
+          time = timeCalcZ(z, pz, speedZ);
           state.z = z;
         }else{
           // relative distance mode
-          time = timeCalcZ(z, 0, 10);
+          time = timeCalcZ(z, 0, speedZ);
           state.z += z;
         }
       } else {
