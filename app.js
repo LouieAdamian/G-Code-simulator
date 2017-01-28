@@ -113,14 +113,19 @@
           if (axis == "X") {
               x = dist
                   //console.log("X", dist);
-          }
-          if (axis == "Y") {
+          }if (axis == "Y") {
               y = dist
                   //console.log("Y", dist);
-          }
-          if (axis == "Z") {
+          }if (axis == "Z") {
               z = dist
                   //console.log("Z", dist);
+          if (axis == "E"){
+            console.log("skip E");
+          }if (axis == "F") {
+            console.log("skip F");
+          }else{
+            console.log("error");
+          }
           }
       }
       var time = 0;
